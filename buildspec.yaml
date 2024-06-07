@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 637423522620.dkr.ecr.ap-northeast-2.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker images...
+
+      - docker build -t reservations -f ./apps/api/Dockerfile .
+      - docker tag api:latest 637423522620.dkr.ecr.ap-northeast-2.amazonaws.com/api:latest
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push 637423522620.dkr.ecr.ap-northeast-2.amazonaws.com/api:latest
