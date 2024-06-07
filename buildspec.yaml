@@ -10,7 +10,7 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker images...
 
-      - docker build -t reservations -f ./apps/api/Dockerfile .
+      - docker build -t api -f ./apps/api/Dockerfile .
       - docker tag api:latest 637423522620.dkr.ecr.ap-northeast-2.amazonaws.com/api:latest
 
   post_build:
