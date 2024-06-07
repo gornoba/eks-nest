@@ -1,4 +1,4 @@
-FROM node:alpine as development
+FROM node:lts-alpine as development
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ COPY apps/api apps/api
 
 RUN npm run build api
 
-FROM node:alpine as production
+FROM node:lts-alpine as production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
