@@ -46,5 +46,26 @@ spec:
               key: DATABASE_NAME
       ports:
         - containerPort: 3000
+      livenessProbe:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - nc -z localhost 3000
+        initialDelaySeconds: 20
+        periodSeconds: 10
+      readinessProbe:
+        httpGet:
+          path: /health-check
+          port: 3000
+        initialDelaySeconds: 20
+        periodSeconds: 10
+      resources:
+        requests:
+          cpu: '100m'
+          memory: '128Mi'
+        limits:
+          cpu: '250m'
+          memory: '256Mi'
   dnsPolicy: ClusterFirst
   restartPolicy: Always
