@@ -5,12 +5,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY tsconfig.json tsconfig.json
 COPY nest-cli.json nest-cli.json
+COPY apps/api apps/api
+COPY libs libs
 
 RUN npm install
-
-COPY apps/api apps/api
-# COPY libs libs
-
 RUN npm run build api
 
 FROM node:lts-alpine as production
