@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: database
+  name: database
+spec:
+  containers:
+    - image: postgres:alpine
+      name: database
+      env:
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: DATABASE_PASSWORD
+      volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      ports:
+        - containerPort: 5432
+  volumes:
+    - name: postgres-data
+      emptyDir: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always

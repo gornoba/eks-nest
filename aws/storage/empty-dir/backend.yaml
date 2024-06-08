@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: backend
+  name: backend
+spec:
+  initContainers:
+    - name: wait-for-database
+      image: busybox
+      command:
+        [
+          'sh',
+          '-c',
+          'until nc -z database-svc 5432; do echo waiting for database; sleep 2; done;',
+        ]
+  containers:
+    - image: 637423522620.dkr.ecr.ap-northeast-2.amazonaws.com/api:latest
+      name: backend
+      env:
+        - name: DATABASE_HOST
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: DATABASE_HOST
+        - name: DATABASE_PORT
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: DATABASE_PORT
+        - name: DATABASE_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: DATABASE_USER
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: DATABASE_PASSWORD
+        - name: DATABASE_NAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres
+              key: DATABASE_NAME
+      ports:
+        - containerPort: 3000
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always

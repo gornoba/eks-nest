@@ -29,7 +29,6 @@ export class UserController {
     @Param('id', new ParseIntPipe()) id: number,
     @Body() userDto: UserUpdateDto,
   ) {
-    console.log('🚀 ~ UserController ~ id:', id);
     return await this.userService.findOneAndUpdate(id, userDto);
   }
 
