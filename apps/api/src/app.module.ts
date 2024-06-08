@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule, DatabaseModule, UserEntity } from '@app/common';
+import { ConfigModule, HealthCheckModule } from '@app/common';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    DatabaseModule.forFeature([UserEntity]),
-    ConfigModule,
-  ],
+  imports: [ConfigModule, HealthCheckModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
 })
