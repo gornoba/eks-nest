@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: backend
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: backend
+    spec:
+      containers:
+        - image: 637423522620.dkr.ecr.ap-northeast-2.amazonaws.com/api:latest
+          name: backend
+          env:
+            - name: DATABASE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: DATABASE_HOST
+            - name: DATABASE_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: DATABASE_PORT
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: DATABASE_USER
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: DATABASE_PASSWORD
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: DATABASE_NAME
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - nc -z localhost 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health-check
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: '100m'
+              memory: '128Mi'
+            limits:
+              cpu: '250m'
+              memory: '256Mi'
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
