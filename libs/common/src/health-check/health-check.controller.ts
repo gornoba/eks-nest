@@ -4,6 +4,6 @@ import { Controller, Get } from '@nestjs/common';
 export class HealthCheckController {
   @Get()
   healthChcek() {
-    return true;
+    return process.env.HOSTNAME;
   }
 }
